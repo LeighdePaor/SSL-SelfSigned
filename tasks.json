@@ -6,6 +6,22 @@
       "type": "promptString",
       "description": "Device name used under pki/devices",
       "default": "device.local"
+    },
+    {
+      "id": "ipAddress",
+      "type": "promptString",
+      "description": "IP address to include in the certificate SAN",
+      "default": "192.168.1.10"
+    },
+    {
+      "id": "storeLocation",
+      "type": "pickString",
+      "description": "Trusted root store location for the CA import",
+      "options": [
+        "CurrentUser",
+        "LocalMachine"
+      ],
+      "default": "CurrentUser"
     }
   ],
   "tasks": [
@@ -78,7 +94,7 @@
     {
       "label": "PKI: Issue Device Certificate",
       "type": "shell",
-      "command": "powershell -ExecutionPolicy Bypass -File ./issue-cert.ps1",
+      "command": "powershell -ExecutionPolicy Bypass -File ./issue-cert.ps1 -DeviceName ${input:deviceName} -IPAddress ${input:ipAddress}",
       "options": { "cwd": "${workspaceFolder}" },
       "problemMatcher": []
     },
@@ -93,6 +109,13 @@
       "label": "PKI: Inspect Device Certificate",
       "type": "shell",
       "command": "openssl x509 -in ./pki/devices/${input:deviceName}/device.crt -text -noout",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "PKI: Install Root CA into Trusted Root Store",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./install-ca-cert.ps1 -StoreLocation ${input:storeLocation}",
       "options": { "cwd": "${workspaceFolder}" },
       "problemMatcher": []
     }

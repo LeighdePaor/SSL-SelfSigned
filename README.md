@@ -8,6 +8,7 @@ It is designed for Windows and currently includes:
 - A script to create the PKI folder structure
 - A script to create a local root CA
 - A script to issue device certificates signed by that CA
+- A script to import the root CA certificate into the Windows trusted root store
 - VS Code tasks for the main OpenSSL workflow
 
 ## What This Repo Is For
@@ -27,6 +28,7 @@ This is intended for local development, homelab use, and internal environments. 
 - `pki-bootstrap.ps1`: Creates the base PKI directory structure
 - `create-ca.ps1`: Generates a root CA private key and self-signed certificate
 - `issue-cert.ps1`: Generates and signs a device certificate
+- `install-ca-cert.ps1`: Imports the root CA certificate into the Windows Trusted Root store
 - `tasks.json`: VS Code task definitions
 - `.gitignore`: Prevents generated PKI files, keys, certs, and editor config from being committed
 
@@ -43,7 +45,7 @@ You need the following installed on Windows:
 This repo currently assumes these paths:
 
 - Perl: `C:\Strawberry\perl\bin`
-- NASM: `C:\Users\leigh\AppData\Local\bin\NASM`
+- NASM: `$env:LOCALAPPDATA\bin\NASM`
 
 The build script prepends those paths to `PATH` for the current process.
 
@@ -152,6 +154,26 @@ The certificate includes both:
 - DNS SAN for the device name
 - IP SAN for the supplied IP address
 
+### Step 4: Install the Root CA into the Windows Trust Store
+
+For per-user trust on the current machine:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-ca-cert.ps1
+```
+
+For system-wide trust:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-ca-cert.ps1 -StoreLocation LocalMachine
+```
+
+Notes:
+
+- `CurrentUser` does not require elevation in normal cases.
+- `LocalMachine` typically requires an elevated PowerShell session.
+- The script imports `pki/ca/myCA.pem` by default.
+
 ## Export Examples
 
 If you need a PKCS#12 bundle for import into Windows, browsers, reverse proxies, or appliances, you can export one from the generated device key and certificate.
@@ -218,7 +240,7 @@ If the OpenSSL build script fails because `nmake` is missing, start an x64 Visua
 The OpenSSL build script prepends these paths for the current process:
 
 - `C:\Strawberry\perl\bin`
-- `C:\Users\leigh\AppData\Local\bin\NASM`
+- `$env:LOCALAPPDATA\bin\NASM`
 
 If your tools are installed somewhere else, update `build-openssl-4.0.0.ps1`. If `openssl` is not available when running the PKI scripts, either add your OpenSSL install `bin` directory to `PATH` first or invoke the scripts from a shell where OpenSSL is already available.
 
@@ -241,6 +263,7 @@ powershell -ExecutionPolicy Bypass -File .\build-openssl-4.0.0.ps1
 powershell -ExecutionPolicy Bypass -File .\pki-bootstrap.ps1
 powershell -ExecutionPolicy Bypass -File .\create-ca.ps1
 powershell -ExecutionPolicy Bypass -File .\issue-cert.ps1 -DeviceName router.lab.local -IPAddress 192.168.1.1
+powershell -ExecutionPolicy Bypass -File .\install-ca-cert.ps1
 ```
 
 After that:

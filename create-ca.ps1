@@ -1,9 +1,20 @@
-# ============================================
-# HomeLab Root CA Creation Script
-# Creates a full Certificate Authority automatically
-# ============================================
+<#
+.SYNOPSIS
+Creates a self-signed root CA for the local PKI.
 
-$root = "$PSScriptRoot/../pki"
+.DESCRIPTION
+Creates the required PKI directories, writes an OpenSSL configuration file,
+generates a root CA private key, and creates a self-signed root certificate.
+
+.EXAMPLE
+powershell -ExecutionPolicy Bypass -File .\create-ca.ps1
+
+.NOTES
+This script expects the openssl executable to be available in PATH.
+Generated CA materials are written under the repository-local pki folder.
+#>
+
+$root = Join-Path $PSScriptRoot "pki"
 $caDir = "$root/ca"
 
 # Create folder structure if missing

@@ -1,3 +1,34 @@
+<#
+.SYNOPSIS
+Builds OpenSSL 4.0.0 from the official source repository on Windows.
+
+.DESCRIPTION
+Clones or reuses a local checkout of the OpenSSL repository, checks out the
+openssl-4.0.0 tag, configures a 64-bit Windows build, optionally runs tests,
+and installs the resulting binaries to a local folder.
+
+.PARAMETER WorkDir
+Working directory used to store the OpenSSL source checkout.
+
+.PARAMETER InstallDir
+Target directory for the local OpenSSL installation.
+
+.PARAMETER RunTests
+Runs nmake test after the build completes.
+
+.PARAMETER ForceClean
+Removes any existing source checkout before cloning again.
+
+.EXAMPLE
+powershell -ExecutionPolicy Bypass -File .\build-openssl-4.0.0.ps1
+
+.EXAMPLE
+powershell -ExecutionPolicy Bypass -File .\build-openssl-4.0.0.ps1 -RunTests -ForceClean
+
+.NOTES
+Run this script from an environment where the Visual Studio build tools are
+initialized and nmake is available.
+#>
 param(
     [string]$WorkDir = "$PSScriptRoot/openssl-src",
     [string]$InstallDir = "$PSScriptRoot/openssl-install",
@@ -9,7 +40,7 @@ $ErrorActionPreference = "Stop"
 
 # User-provided tool locations
 $PerlBin = "C:\Strawberry\perl\bin"
-$NasmBin = "C:\Users\leigh\AppData\Local\bin\NASM"
+$NasmBin = Join-Path $env:LOCALAPPDATA "bin\NASM"
 
 # OpenSSL source settings
 $RepoUrl = "https://github.com/openssl/openssl.git"
