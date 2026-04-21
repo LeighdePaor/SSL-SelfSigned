@@ -160,10 +160,10 @@ Example:
 
 ```powershell
 openssl pkcs12 -export `
-	-out .\pki\devices\device.local\device.pfx `
-	-inkey .\pki\devices\device.local\device.key `
-	-in .\pki\devices\device.local\device.crt `
-	-certfile .\pki\ca\myCA.pem
+  -out .\pki\devices\device.local\device.pfx `
+  -inkey .\pki\devices\device.local\device.key `
+  -in .\pki\devices\device.local\device.crt `
+  -certfile .\pki\ca\myCA.pem
 ```
 
 That command will prompt for an export password and create a `.pfx` file containing:
@@ -176,8 +176,8 @@ You can also export DER format if a target system requires it:
 
 ```powershell
 openssl x509 -outform der `
-	-in .\pki\devices\device.local\device.crt `
-	-out .\pki\devices\device.local\device.der
+  -in .\pki\devices\device.local\device.crt `
+  -out .\pki\devices\device.local\device.der
 ```
 
 For verification, you can inspect the issued certificate with:
