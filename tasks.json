@@ -1,5 +1,13 @@
 {
   "version": "2.0.0",
+  "inputs": [
+    {
+      "id": "deviceName",
+      "type": "promptString",
+      "description": "Device name used under pki/devices",
+      "default": "device.local"
+    }
+  ],
   "tasks": [
     {
       "label": "OpenSSL: Clone + Build 4.0.0",
@@ -71,6 +79,20 @@
       "label": "PKI: Issue Device Certificate",
       "type": "shell",
       "command": "powershell -ExecutionPolicy Bypass -File ./issue-cert.ps1",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "PKI: Export Device Certificate as PFX",
+      "type": "shell",
+      "command": "openssl pkcs12 -export -out ./pki/devices/${input:deviceName}/device.pfx -inkey ./pki/devices/${input:deviceName}/device.key -in ./pki/devices/${input:deviceName}/device.crt -certfile ./pki/ca/myCA.pem",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "PKI: Inspect Device Certificate",
+      "type": "shell",
+      "command": "openssl x509 -in ./pki/devices/${input:deviceName}/device.crt -text -noout",
       "options": { "cwd": "${workspaceFolder}" },
       "problemMatcher": []
     }
