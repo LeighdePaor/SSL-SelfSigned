@@ -56,13 +56,22 @@
     {
       "label": "PKI: Bootstrap Folder Structure",
       "type": "shell",
-      "command": "powershell -ExecutionPolicy Bypass -File .vscode/pki-bootstrap.ps1",
+      "command": "powershell -ExecutionPolicy Bypass -File ./pki-bootstrap.ps1",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "PKI: Create Root CA",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./create-ca.ps1",
+      "options": { "cwd": "${workspaceFolder}" },
       "problemMatcher": []
     },
     {
       "label": "PKI: Issue Device Certificate",
       "type": "shell",
-      "command": "powershell -ExecutionPolicy Bypass -File .vscode/issue-cert.ps1",
+      "command": "powershell -ExecutionPolicy Bypass -File ./issue-cert.ps1",
+      "options": { "cwd": "${workspaceFolder}" },
       "problemMatcher": []
     }
   ]

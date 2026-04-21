@@ -1,9 +1,17 @@
 # Generated PKI content
 pki/**
 
+# Generated PKI config files only (repo-level *.cnf/*.conf remain trackable)
+pki/**/*.cnf
+pki/**/*.conf
+
 # OpenSSL source/build/install output from local build script
 openssl-src/**
 openssl-install/**
+
+# VS Code workspace configuration
+.vscode/
+*.code-workspace
 
 # Private keys and certificate material
 *.key
