@@ -22,6 +22,11 @@
         "LocalMachine"
       ],
       "default": "CurrentUser"
+    },
+    {
+      "id": "caThumbprint",
+      "type": "promptString",
+      "description": "Thumbprint of the CA certificate to remove from the trusted root store"
     }
   ],
   "tasks": [
@@ -116,6 +121,13 @@
       "label": "PKI: Install Root CA into Trusted Root Store",
       "type": "shell",
       "command": "powershell -ExecutionPolicy Bypass -File ./install-ca-cert.ps1 -StoreLocation ${input:storeLocation}",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "PKI: Remove Root CA from Trusted Root Store",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./remove-ca-cert.ps1 -Thumbprint ${input:caThumbprint} -StoreLocation ${input:storeLocation}",
       "options": { "cwd": "${workspaceFolder}" },
       "problemMatcher": []
     }

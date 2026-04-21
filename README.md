@@ -9,6 +9,7 @@ It is designed for Windows and currently includes:
 - A script to create a local root CA
 - A script to issue device certificates signed by that CA
 - A script to import the root CA certificate into the Windows trusted root store
+- A script to remove the root CA certificate from the Windows trusted root store by thumbprint
 - VS Code tasks for the main OpenSSL workflow
 
 ## What This Repo Is For
@@ -29,6 +30,7 @@ This is intended for local development, homelab use, and internal environments. 
 - `create-ca.ps1`: Generates a root CA private key and self-signed certificate
 - `issue-cert.ps1`: Generates and signs a device certificate
 - `install-ca-cert.ps1`: Imports the root CA certificate into the Windows Trusted Root store
+- `remove-ca-cert.ps1`: Removes a root CA certificate from the Windows Trusted Root store by thumbprint
 - `tasks.json`: VS Code task definitions
 - `.gitignore`: Prevents generated PKI files, keys, certs, and editor config from being committed
 
@@ -173,6 +175,28 @@ Notes:
 - `CurrentUser` does not require elevation in normal cases.
 - `LocalMachine` typically requires an elevated PowerShell session.
 - The script imports `pki/ca/myCA.pem` by default.
+
+### Remove the Root CA by Thumbprint
+
+If you need to uninstall the CA from the Windows trust store later, use the
+certificate thumbprint shown during import or retrieve it from the certificate
+manager.
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\remove-ca-cert.ps1 -Thumbprint ABCD1234EF567890ABCD1234EF567890ABCD1234
+```
+
+For the local machine store:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\remove-ca-cert.ps1 -Thumbprint ABCD1234EF567890ABCD1234EF567890ABCD1234 -StoreLocation LocalMachine
+```
+
+Notes:
+
+- Thumbprint matching ignores whitespace.
+- `LocalMachine` removal typically requires an elevated PowerShell session.
+- Use `-WhatIf` first if you want to preview the removal.
 
 ## Export Examples
 
