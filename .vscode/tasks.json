@@ -130,6 +130,18 @@
       "command": "powershell -ExecutionPolicy Bypass -File ./remove-ca-cert.ps1 -Thumbprint ${input:caThumbprint} -StoreLocation ${input:storeLocation}",
       "options": { "cwd": "${workspaceFolder}" },
       "problemMatcher": []
+    },
+    {
+      "label": "Deploy: Raspberry Pi",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .vscode/deploy-pi.ps1 -DeviceName raspberrypi.local -PiHost 192.168.1.50",
+      "problemMatcher": []
+    },
+    {
+      "label": "Deploy: OC200",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .vscode/deploy-oc200.ps1 -DeviceName omada.local -ControllerURL https://192.168.1.80",
+      "problemMatcher": []
     }
   ]
 }

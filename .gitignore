@@ -10,7 +10,8 @@ openssl-src/**
 openssl-install/**
 
 # VS Code workspace configuration
-.vscode/
+.vscode/*
+!.vscode/tasks.json
 *.code-workspace
 
 # Private keys and certificate material
