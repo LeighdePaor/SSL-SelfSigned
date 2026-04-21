@@ -27,12 +27,22 @@ session. Use -WhatIf to preview the action.
 #>
 [CmdletBinding(SupportsShouldProcess = $true, ConfirmImpact = 'Medium')]
 param(
-    [string]$CertPath = (Join-Path $PSScriptRoot "pki\ca\myCA.pem"),
+    [string]$CertPath,
     [ValidateSet("CurrentUser", "LocalMachine")]
     [string]$StoreLocation = "CurrentUser"
 )
 
 $ErrorActionPreference = "Stop"
+
+$scriptRoot = if (-not [string]::IsNullOrWhiteSpace($PSScriptRoot)) {
+    $PSScriptRoot
+} else {
+    Split-Path -Parent $MyInvocation.MyCommand.Path
+}
+
+if ([string]::IsNullOrWhiteSpace($CertPath)) {
+    $CertPath = Join-Path $scriptRoot "pki\ca\myCA.pem"
+}
 
 if (-not (Test-Path $CertPath)) {
     throw "CA certificate not found: $CertPath"
