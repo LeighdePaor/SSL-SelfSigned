@@ -92,6 +92,62 @@ Important:
 - Run this from an x64 Developer PowerShell or another environment where `nmake` is available.
 - If `nmake` is missing, the build script will stop with an error.
 
+## Install OpenSSL On Windows (After Build)
+
+After the build completes, `openssl.exe` is installed to:
+
+- `./openssl-install/bin/openssl.exe`
+
+You can use it immediately by calling it with a path, or add that folder to PATH.
+
+### Option 1: Use Full Path (No PATH Changes)
+
+```powershell
+.\openssl-install\bin\openssl.exe --version
+```
+
+### Option 2: Add OpenSSL To PATH (Recommended)
+
+This repo now includes `install-openssl.ps1` to add or remove `./openssl-install/bin`
+from PATH.
+
+Per-user PATH install (no admin required):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-openssl.ps1
+```
+
+Machine-wide PATH install (requires elevated PowerShell):
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-openssl.ps1 -Scope LocalMachine
+```
+
+Remove from PATH later:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-openssl.ps1 -Uninstall
+```
+
+Remove from machine-wide PATH:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install-openssl.ps1 -Scope LocalMachine -Uninstall
+```
+
+Verify after opening a new terminal:
+
+```powershell
+openssl --version
+where openssl
+```
+
+Notes:
+
+- The script also updates PATH for the current shell session immediately.
+- Other already-open terminals and apps may need to be restarted.
+- If `-Scope LocalMachine` is used, run PowerShell as Administrator.
+
 ## PKI Workflow
 
 The typical PKI flow is:

@@ -33,8 +33,16 @@
     {
       "label": "OpenSSL: Clone + Build 4.0.0",
       "type": "shell",
-      "command": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$vswhere = Join-Path ${env:ProgramFiles(x86)} 'Microsoft Visual Studio\\Installer\\vswhere.exe'; if (-not (Test-Path $vswhere)) { throw 'vswhere.exe not found. Install Visual Studio Build Tools 2022.' }; $vsInstall = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath; if (-not $vsInstall) { throw 'No Visual Studio installation with C++ build tools found.' }; $vsDevCmd = Join-Path $vsInstall 'Common7\\Tools\\VsDevCmd.bat'; if (-not (Test-Path $vsDevCmd)) { throw \"VsDevCmd.bat not found at $vsDevCmd\" }; cmd /c \"\"$vsDevCmd\" -arch=x64 -host_arch=x64 && powershell -NoProfile -ExecutionPolicy Bypass -File .\\build-openssl-4.0.0.ps1\"\"",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\.vscode\\run-openssl-build.ps1"
+      ],
       "options": { "cwd": "${workspaceFolder}" },
+      "group": { "kind": "build", "isDefault": true },
       "problemMatcher": []
     },
     {
@@ -57,6 +65,7 @@
       "command": "nmake",
       "options": { "cwd": "${workspaceFolder}" },
       "dependsOn": "OpenSSL: Configure",
+      "group": "build",
       "problemMatcher": []
     },
     {
@@ -79,6 +88,39 @@
       "label": "OpenSSL: Clean",
       "type": "shell",
       "command": "nmake clean",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "OpenSSL: Add to PATH (CurrentUser)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\install-openssl.ps1",
+        "-Scope",
+        "CurrentUser"
+      ],
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "OpenSSL: Remove from PATH (CurrentUser)",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        ".\\install-openssl.ps1",
+        "-Scope",
+        "CurrentUser",
+        "-Uninstall"
+      ],
       "options": { "cwd": "${workspaceFolder}" },
       "problemMatcher": []
     },
