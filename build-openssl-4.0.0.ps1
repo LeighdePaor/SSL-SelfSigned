@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-Builds OpenSSL 4.0.0 from the official source repository on Windows.
+Builds OpenSSL 4.0.0 on Windows from the official GitHub source repository.
 
 .DESCRIPTION
 Clones or reuses a local checkout of the OpenSSL repository, checks out the
