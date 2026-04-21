@@ -54,7 +54,11 @@ function Normalize-PathEntry {
     }
 }
 
-$target = [EnvironmentVariableTarget]::$Scope
+$target = if ($Scope -eq 'LocalMachine') {
+    [System.EnvironmentVariableTarget]::Machine
+} else {
+    [System.EnvironmentVariableTarget]::User
+}
 $binDir = Join-Path (Resolve-Path $InstallDir).Path 'bin'
 $opensslExe = Join-Path $binDir 'openssl.exe'
 
@@ -70,7 +74,7 @@ if ($Scope -eq 'LocalMachine' -and -not (Test-IsAdministrator)) {
     throw 'LocalMachine PATH update requires an elevated PowerShell session (Run as Administrator).'
 }
 
-$existingPath = [Environment]::GetEnvironmentVariable('Path', $target)
+$existingPath = [System.Environment]::GetEnvironmentVariable('Path', $target)
 if ([string]::IsNullOrWhiteSpace($existingPath)) {
     $segments = @()
 } else {
@@ -88,7 +92,7 @@ if ($Uninstall) {
     if ($filtered.Count -eq $segments.Count) {
         Write-Host "No PATH entry to remove for: $normalizedBin"
     } else {
-        [Environment]::SetEnvironmentVariable('Path', ($filtered -join ';'), $target)
+        [System.Environment]::SetEnvironmentVariable('Path', ($filtered -join ';'), $target)
         Write-Host "Removed from $Scope PATH: $normalizedBin"
     }
 } else {
@@ -96,7 +100,7 @@ if ($Uninstall) {
         Write-Host "Already present in $Scope PATH: $normalizedBin"
     } else {
         $updated = @($segments + $normalizedBin)
-        [Environment]::SetEnvironmentVariable('Path', ($updated -join ';'), $target)
+        [System.Environment]::SetEnvironmentVariable('Path', ($updated -join ';'), $target)
         Write-Host "Added to $Scope PATH: $normalizedBin"
     }
 }
