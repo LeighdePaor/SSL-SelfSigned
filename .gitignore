@@ -1,0 +1,34 @@
+# Generated PKI content
+pki/**
+
+# OpenSSL source/build/install output from local build script
+openssl-src/**
+openssl-install/**
+
+# Private keys and certificate material
+*.key
+*.pem
+*.crt
+*.cer
+*.csr
+*.der
+*.p7b
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.srl
+
+# OpenSSL runtime/random state and CA DB files
+*.rnd
+index.txt
+index.txt.attr
+index.txt.old
+serial
+serial.old
+
+# Temporary and backup files
+*.tmp
+*.bak
+*.orig
+*~

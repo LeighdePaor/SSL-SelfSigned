@@ -1,0 +1,69 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "OpenSSL: Clone + Build 4.0.0",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File ./build-openssl-4.0.0.ps1",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "OpenSSL: Detect NASM",
+      "type": "shell",
+      "command": "where nasm || echo ERROR: NASM not found in PATH",
+      "problemMatcher": []
+    },
+    {
+      "label": "OpenSSL: Configure",
+      "type": "shell",
+      "command": "perl Configure VC-WIN64A",
+      "options": { "cwd": "${workspaceFolder}" },
+      "dependsOn": "OpenSSL: Detect NASM",
+      "problemMatcher": []
+    },
+    {
+      "label": "OpenSSL: Build",
+      "type": "shell",
+      "command": "nmake",
+      "options": { "cwd": "${workspaceFolder}" },
+      "dependsOn": "OpenSSL: Configure",
+      "problemMatcher": []
+    },
+    {
+      "label": "OpenSSL: Test",
+      "type": "shell",
+      "command": "nmake test",
+      "options": { "cwd": "${workspaceFolder}" },
+      "dependsOn": "OpenSSL: Build",
+      "problemMatcher": []
+    },
+    {
+      "label": "OpenSSL: Install",
+      "type": "shell",
+      "command": "nmake install",
+      "options": { "cwd": "${workspaceFolder}" },
+      "dependsOn": "OpenSSL: Test",
+      "problemMatcher": []
+    },
+    {
+      "label": "OpenSSL: Clean",
+      "type": "shell",
+      "command": "nmake clean",
+      "options": { "cwd": "${workspaceFolder}" },
+      "problemMatcher": []
+    },
+    {
+      "label": "PKI: Bootstrap Folder Structure",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .vscode/pki-bootstrap.ps1",
+      "problemMatcher": []
+    },
+    {
+      "label": "PKI: Issue Device Certificate",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File .vscode/issue-cert.ps1",
+      "problemMatcher": []
+    }
+  ]
+}
